@@ -103,7 +103,62 @@ void Character::setFailFightTimes(int times)
 
 bool Character::Fight(Character &monster)
 {
-	return true;	// 临时写的为了编译
+	int hp1, hp2;
+	bool attackOrderFlag;
+	hp1 = this->getDex() * 3;
+	hp2 = monster.getDex() * 3;
+	cout << "\n系统选择了[" << monster.getName() << "]作为敌人。" << endl;
+	cout << this->getName() << "的DEX为" << this->getDex() << ",";
+	cout << monster.getName() << "的DEX为" << monster.getDex() << ",由";
+	attackOrderFlag = this->getDex() >= monster.getDex();
+	cout << (attackOrderFlag ? this->getName() : monster.getName()) << "先进行攻击。\n" << endl;
+
+	while (true)
+	{
+		if (attackOrderFlag)
+		{
+			cout << this->getName() << "发动攻击！对"
+				<< monster.getName() << "造成" << this->getStr() << "点伤害。" << endl;
+			cout << monster.getName() << "的HP从" << hp2 << "变为";
+			if (hp2 > this->getStr())
+			{
+				hp2 = hp2 - this->getStr();
+				cout << hp2 << "\n" << endl;
+				attackOrderFlag = false;
+			}
+			else
+			{
+				hp2 = 0;
+				cout << hp2 << "\n" << endl;
+				cout << monster.getName() << "倒下了！获胜的是 ：" << this->getName() << endl;
+				this->setTotalFightTimes(this->getTotalFightTimes() + 1);
+				this->setExp(monster.getExp() + 100);
+				return true;
+			}
+		}
+		else
+		{
+			cout << monster.getName() << "发动攻击！对"
+				<< this->getName() << "造成" << monster.getStr() << "点伤害。" << endl;
+			cout << this->getName() << "的HP从" << hp1 << "变为";
+			if (hp1 > monster.getStr())
+			{
+				hp1 = hp1 - monster.getStr();
+				cout << hp1 << "\n" << endl;
+				attackOrderFlag = true;
+			}
+			else
+			{
+				hp1 = 0;
+				cout << hp1 << "\n" << endl;
+				cout << this->getName() << "倒下了！获胜的是 ：" << monster.getName() << "\n" << endl;
+				this->setTotalFightTimes(this->getTotalFightTimes() + 1);
+				this->setFailFightTimes(this->getFailFightTimes() + 1);
+				return false;
+			}
+		}
+	}
+
 }
 
 void Character::getInformation()

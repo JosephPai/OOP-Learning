@@ -27,11 +27,10 @@ int main()
 	ENEMY[3] = Character("大青蛙", 3, 2, 3);
 
     int mainMenuState, creatState;
-	bool attackOrderFlag;
     bool init;
     init = true;
     Character chaObj [6];
-	int objCounter = 1, hp1, hp2;
+	int objCounter = 1;
 	int mainMenuSel, fightPointer1,fightPointer2;
 	string pointSel, fightSel;
     string name;
@@ -123,60 +122,8 @@ int main()
 			{	// 还有5
 				// 判断是否大于objCounter
 				fightPointer1 = atoi(fightSel.c_str());
-				fightPointer2 = (rand() % 4);				
-				hp1 = chaObj[fightPointer1].getDex() * 3;
-				hp2 = ENEMY[fightPointer2].getDex() * 3;
-				cout << "\n系统选择了[" << ENEMY[fightPointer2].getName() << "]作为敌人。" << endl;
-				cout << chaObj[fightPointer1].getName() << "的DEX为" << chaObj[fightPointer1].getDex() << ",";
-				cout << ENEMY[fightPointer2].getName() << "的DEX为" << ENEMY[fightPointer2].getDex() << ",由";
-				attackOrderFlag = chaObj[fightPointer1].getDex() >= ENEMY[fightPointer2].getDex();
-				cout << (attackOrderFlag ? chaObj[fightPointer1].getName() : ENEMY[fightPointer2].getName()) << "先进行攻击。\n" << endl;
-				
-				while (true)
-				{
-					if (attackOrderFlag)
-					{
-						cout << chaObj[fightPointer1].getName() << "发动攻击！对"
-							<< ENEMY[fightPointer2].getName() << "造成" << chaObj[fightPointer1].getStr() << "点伤害。" << endl;
-						cout << ENEMY[fightPointer2].getName() << "的HP从" << hp2 << "变为";
-						if (hp2 > chaObj[fightPointer1].getStr())
-						{
-							hp2 = hp2 - chaObj[fightPointer1].getStr();
-							cout << hp2 << "\n" << endl;
-							attackOrderFlag = false;
-						}
-						else
-						{
-							hp2 = 0;
-							cout << hp2 << "\n" << endl;
-							cout << ENEMY[fightPointer2].getName() << "倒下了！获胜的是 ：" << chaObj[fightPointer1].getName() << endl;
-							chaObj[fightPointer1].setTotalFightTimes(chaObj[fightPointer1].getTotalFightTimes() + 1);
-							chaObj[fightPointer1].setExp(chaObj[fightPointer1].getExp() + 100);
-							break;
-						}
-					}
-					else
-					{
-						cout << ENEMY[fightPointer2].getName() << "发动攻击！对"
-							<< chaObj[fightPointer1].getName() << "造成" << ENEMY[fightPointer2].getStr() << "点伤害。" << endl;
-						cout << chaObj[fightPointer1].getName() << "的HP从" << hp1 << "变为";
-						if (hp1 > ENEMY[fightPointer2].getStr())
-						{
-							hp1 = hp1 - ENEMY[fightPointer2].getStr();
-							cout << hp1 << "\n" << endl;
-							attackOrderFlag = true;
-						}
-						else
-						{
-							hp1 = 0;
-							cout << hp1 << "\n" << endl;
-							cout << chaObj[fightPointer1].getName() << "倒下了！获胜的是 ：" << ENEMY[fightPointer2].getName() << "\n" << endl;
-							chaObj[fightPointer1].setTotalFightTimes(chaObj[fightPointer1].getTotalFightTimes() + 1);
-							chaObj[fightPointer1].setFailFightTimes(chaObj[fightPointer1].getFailFightTimes() + 1);
-							break;
-						}
-					}
-				}
+				fightPointer2 = (rand() % 4);
+				chaObj[fightPointer1].Fight(ENEMY[fightPointer2]);
 			}
         }
 
