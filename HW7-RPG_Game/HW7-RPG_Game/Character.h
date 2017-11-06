@@ -9,24 +9,24 @@ class Character
 public:
 	Character();
 	Character(string name, int str, int dex, int con);
-	string getName();
-	void setName(string name);
-	int getLevel();
-	void setLevel(int levle);
-	int getStr();
-	void setStr(int str);
-	int getDex();
-	void setDex(int dex);
-	int getCon();
-	void setCon(int con);
-	int getExp();
-	void setExp(int exp);
-	int getTotalFightTimes();
-	void setTotalFightTimes(int times);
-	int getFailFightTimes();
-	void setFailFightTimes(int time);
+	string GetName();
+	void GetName(string name);
+	int GetLevel();
+	void SetLevel(int levle);
+	int GetStr();
+	void SetStr(int str);
+	int GetDex();
+	void SetDex(int dex);
+	int GetCon();
+	void SetCon(int con);
+	int GetExp();
+	void SetExp(int exp);
+	int GetTotalFightTimes();
+	void SetTotalFightTimes(int times);
+	int GetFailFightTimes();
+	void SetFailFightTimes(int time);
 	bool Fight(Character &monster);
-	void getInformation();
+	void GetInformation();
 
 private:
 	string _name;
