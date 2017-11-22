@@ -8,6 +8,7 @@ class Character
 {
 public:
 	Character();
+	~Character();
 	Character(string name, int str, int dex, int con);
 	string GetName();
 	void GetName(string name);
@@ -27,6 +28,7 @@ public:
 	void SetFailFightTimes(int time);
 	bool Fight(Character &monster);
 	void GetInformation();
+	void LevelUp(int lv);
 
 private:
 	string _name;
