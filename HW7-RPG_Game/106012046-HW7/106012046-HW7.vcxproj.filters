@@ -24,6 +24,15 @@
     <ClInclude Include="Job.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MeleeJob.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DefenseJob.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RemoteJob.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -36,6 +45,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Job.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeJob.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DefenseJob.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteJob.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

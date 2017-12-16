@@ -2,9 +2,9 @@
 * Class: Exchange Student
 * ID£º106012046
 * Name: Bai Zechen
-* HW number: 7
-* Date: 10/23/106
-* Purpose: RPG GAEM #1
+* HW number: Game 4
+* Date: 12/17/106
+* Purpose: RPG GAEM #4
 ***/
 
 /*

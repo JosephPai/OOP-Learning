@@ -27,3 +27,14 @@ int Job::GetExtraCon()
 {
     return this->_extraCon;
 }
+
+int Job::GetDamage(Character* cha)
+{
+    cout << "This is the base job's damage." << endl;
+    return 0;
+}
+
+string Job::GetType()
+{
+    return "NormalType";
+}

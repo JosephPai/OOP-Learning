@@ -3,8 +3,11 @@
 #define CHARACTER_H
 #include <iostream>
 #include <string>
-#include "Job.h"
 using namespace std;
+#include "Job.h"
+
+class Job;	//前置声明，解决头文件.h重复包含问题
+
 class Character
 {
 public:

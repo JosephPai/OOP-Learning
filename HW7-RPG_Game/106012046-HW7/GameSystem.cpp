@@ -5,8 +5,6 @@
 #include <random>
 #include <time.h>
 
-using namespace std;
-
 GameSystem::GameSystem()
 {
     _charactersList.reserve(5);
@@ -15,9 +13,12 @@ GameSystem::GameSystem()
     _monsterList.push_back(Character("兽人(Orc)", 6, 1, 1));
     _monsterList.push_back(Character("大青蛙(Frog)", 3, 2, 3));			// init the enemy
     _jobList.reserve(12);
-    _jobList.push_back(Job("盗贼(Thief)", 2, 0, 0));
-    _jobList.push_back(Job("猎人(Hunter)", 0, 2, 0));
-    _jobList.push_back(Job("战士(Warrior)", 0, 0, 2	));				// init the job
+    _jobList.push_back(new MeleeJob("盗贼(Thief)", 2, 0, 0));
+    _jobList.push_back(new MeleeJob("刺客(Assassinator)", 3, 0, 0));
+    _jobList.push_back(new RemoteJob ("猎人(Hunter)", 0, 2, 0));
+    _jobList.push_back(new RemoteJob("神射手(Marksman)", 0, 3, 0));
+    _jobList.push_back(new DefenseJob("战士(Warrior)", 0, 0, 2));
+    _jobList.push_back(new DefenseJob("狂战士(Berserker Warrior)", 0, 0, 3));		// init the job
 }
 
 void GameSystem::Start()
@@ -109,6 +110,7 @@ bool GameSystem::Create()
     const std::regex NAME_PATTERN("[\\\\/:*?\"<>|]");		// regular expression for name
     const std::regex NUM_PATTERN("^[1-9]\\d*$");
     int strTemp, dexTemp, conTemp, pointTemp;
+    int jobCount;
     int creatState;
     const int CREAT_NAME = 0, CREAT_POINT = 1, CREAT_JOB = 2, CREAT_INFO = 3;
     string name, pointSel, jobSel;
@@ -182,22 +184,117 @@ bool GameSystem::Create()
 
     while (creatState == CREAT_JOB)
     {
-        cout << "请选择职业：(Please choose the job:" << endl;
-        ListJobs();									// list the name of jobs
-        getline(cin, pointSel);
+        string secondSel;
+        cout << "\n请选择职业种类：(Please choose the job type:" << endl;
+        cout << "1.近距离攻击型(MeleeJob)\n2.远距离攻击型(RemoteJob)\n3.防御系(DefenseJob)" << endl;
+        getline(cin, jobSel);
 
-        if (std::regex_match(pointSel, NUM_PATTERN))
+        if (jobSel=="1")
         {
-            if (atoi(pointSel.c_str()) > _jobList.size())		// out of range
+            cout << "请选择职业：" << endl;
+            jobCount = ListJobs(1);
+
+            while (true)
             {
-                cout << "指令错误，请重新输入。(Invalid input, please input again.)" << endl;
-                continue;
+                getline(cin, secondSel);
+
+                if (std::regex_match(secondSel,NUM_PATTERN) && atoi(secondSel.c_str())<=jobCount)
+                {
+                    for (size_t i = 0, j = 0; i < _jobList.size(); i++)
+                    {
+                        if (_jobList.at(i)->GetType() == "近距离攻击型(MeleeJob)")
+                        {
+                            j++;
+                        }
+
+                        if (j == atoi(secondSel.c_str()))
+                        {
+                            _charactersList.back().SetJob(_jobList.at(i));		// add to the vector
+                            break;
+                        }
+                    }
+
+                    cout << "创建成功！(Created successfully)\n" << endl;
+                    creatState = CREAT_INFO;		// switch game state
+                    break;
+                }
+                else
+                {
+                    cout << "指令错误，请重新输入。(Invalid input, please input again.)" << endl;
+                    continue;
+                }
             }
-            else
+        }
+        else if (jobSel=="2")
+        {
+            cout << "请选择职业：" << endl;
+            jobCount = ListJobs(2);
+
+            while (true)
             {
-                _charactersList.back().SetJob(&(_jobList.at(atoi(pointSel.c_str())-1)));		// add to the vector
-                cout << "创建成功！(Created successfully)\n" << endl;
-                creatState = CREAT_INFO;		// switch game state
+                getline(cin, secondSel);
+
+                if (std::regex_match(secondSel, NUM_PATTERN) && atoi(secondSel.c_str()) <= jobCount)
+                {
+                    for (size_t i = 0, j = 0; i < _jobList.size(); i++)
+                    {
+                        if (_jobList.at(i)->GetType() == "远距离攻击型(RemoteJob)")
+                        {
+                            j++;
+                        }
+
+                        if (j == atoi(secondSel.c_str()))
+                        {
+                            _charactersList.back().SetJob(_jobList.at(i));		// add to the vector
+                            break;
+                        }
+                    }
+
+                    cout << "创建成功！(Created successfully)\n" << endl;
+                    creatState = CREAT_INFO;		// switch game state
+                    break;
+                }
+                else
+                {
+                    cout << "指令错误，请重新输入。(Invalid input, please input again.)" << endl;
+                    continue;
+                }
+            }
+        }
+        else if (jobSel == "3")
+        {
+            cout << "请选择职业：" << endl;
+            jobCount = ListJobs(3);
+
+            while (true)
+            {
+                getline(cin, secondSel);
+
+                if (std::regex_match(secondSel, NUM_PATTERN) && atoi(secondSel.c_str()) <= jobCount)
+                {
+                    for (size_t i = 0, j = 0; i < _jobList.size(); i++)
+                    {
+                        if (_jobList.at(i)->GetType() == "防御系(DefenseJob)")
+                        {
+                            j++;
+                        }
+
+                        if (j == atoi(secondSel.c_str()))
+                        {
+                            _charactersList.back().SetJob(_jobList.at(i));		// add to the vector
+                            break;
+                        }
+                    }
+
+                    cout << "创建成功！(Created successfully)\n" << endl;
+                    creatState = CREAT_INFO;		// switch game state
+                    break;
+                }
+                else
+                {
+                    cout << "指令错误，请重新输入。(Invalid input, please input again.)" << endl;
+                    continue;
+                }
             }
         }
         else
@@ -264,7 +361,7 @@ void GameSystem::Fight()
             {
                 fightPointer2 = (rand() % 4);				// Choose enemies randomly
                 randomJobPointer = (rand() % _jobList.size());			// the monster have the probility to have the new job
-                _monsterList[fightPointer2].SetJob(&(_jobList[randomJobPointer]));
+                _monsterList[fightPointer2].SetJob(_jobList[randomJobPointer]);
                 _charactersList[fightPointer1].Fight(_monsterList[fightPointer2]);
                 break;
             }
@@ -355,15 +452,32 @@ void GameSystem::NewJob()
     const std::regex NUM_PATTERN("^[0-3]$");
     string strTemp, dexTemp, conTemp;
     int creatState;
-    const int CREAT_NAME = 0, CREAT_POINT = 1;
-    string jobName;
+    const int CREAT_NAME = 0, CREAT_POINT = 1, CREATE_TYPE = 2;
+    string typeSel,jobName;
     bool repeatFlag=false;						// flag var for repeat name
-    creatState = CREAT_NAME;				// switch game state
+    creatState = CREATE_TYPE;				// switch game state
 
     if (_jobList.size() == 12)
     {
         cout << "职业数量上限为12（The maximum number of jobs is 12\n" << endl;
         return;
+    }
+
+    while (creatState == CREATE_TYPE)
+    {
+        cout << "请选择职业种类：(Please choose the job type:" << endl;
+        cout << "\n1.近距离攻击型(MeleeJob)\n2.远距离攻击型(RemoteJob)\n3.防御系(DefenseJob)" << endl;
+        getline(cin, typeSel);
+
+        if (typeSel=="1" || typeSel=="2" || typeSel=="3")
+        {
+            creatState = CREAT_NAME;
+            break;
+        }
+        else
+        {
+            cout << "指令错误，请重新输入。(Invalid input, please input again.)" << endl;
+        }
     }
 
     while (creatState == CREAT_NAME)
@@ -385,7 +499,7 @@ void GameSystem::NewJob()
 
                 for (size_t i = 0; i < _jobList.size(); i++)
                 {
-                    if (_jobList.at(i).GetName() == jobName)
+                    if (_jobList.at(i)->GetName() == jobName)
                     {
                         repeatFlag = true;						// check wheather the job already exists
                         break;
@@ -460,7 +574,19 @@ void GameSystem::NewJob()
         }
         else
         {
-            _jobList.push_back(Job(jobName, atoi(strTemp.c_str()), atoi(dexTemp.c_str()), atoi(conTemp.c_str())));
+            if (typeSel=="1")
+            {
+                _jobList.push_back(new MeleeJob(jobName, atoi(strTemp.c_str()), atoi(dexTemp.c_str()), atoi(conTemp.c_str())));
+            }
+            else if (typeSel=="2")
+            {
+                _jobList.push_back(new RemoteJob(jobName, atoi(strTemp.c_str()), atoi(dexTemp.c_str()), atoi(conTemp.c_str())));
+            }
+            else
+            {
+                _jobList.push_back(new DefenseJob(jobName, atoi(strTemp.c_str()), atoi(dexTemp.c_str()), atoi(conTemp.c_str())));
+            }
+
             cout << "\n";
             return;
         }
@@ -471,7 +597,7 @@ void GameSystem::DeleteJob()
 {
     const std::regex NUM_PATTERN("^[1-9]\\d*|0$");
     string delSel;
-    ListJobs();
+    ListJobs(0);
     cout << "请输入欲删除的职业(Please input the job you want to delete:" << endl;
 
     while (true)
@@ -504,7 +630,7 @@ void GameSystem::DeleteJob()
 
                 for (size_t i = 0; i < _charactersList.size(); i++)
                 {
-                    if (_charactersList.at(i).GetJob()->GetName() == _jobList.at(delIndex).GetName() )
+                    if (_charactersList.at(i).GetJob()->GetName() == _jobList.at(delIndex)->GetName() )
                     {
                         repeatFlag = true;								// check weather the jobs still have characters
                         break;
@@ -518,7 +644,7 @@ void GameSystem::DeleteJob()
                 }
                 else
                 {
-                    cout << "已删除职业(This job is being deleted：" << _jobList.at(delIndex).GetName() << "。\n";
+                    cout << "已删除职业(This job is being deleted：" << _jobList.at(delIndex)->GetName() << "。\n";
                     _jobList.erase(_jobList.begin() + delIndex);
                     return;
                 }
@@ -532,12 +658,52 @@ void GameSystem::DeleteJob()
     }
 }
 
-void GameSystem::ListJobs()
+int GameSystem::ListJobs(int x)
 {
-    for (size_t i = 0; i < _jobList.size(); i++)
+    int j = 0, i;
+
+    if (x==0)
     {
-        cout << i + 1 << "." << _jobList.at(i).GetName() << endl;
+        for (i = 0; i < _jobList.size(); i++)
+        {
+            cout << i + 1 << "." << _jobList.at(i)->GetName() << endl;
+        }
     }
+    else if (x==1)
+    {
+        for (i = 0,j=1; i < _jobList.size(); i++)
+        {
+            if (_jobList.at(i)->GetType()=="近距离攻击型(MeleeJob)")
+            {
+                cout << j << "." << _jobList.at(i)->GetName() << endl;
+                j++;
+            }
+        }
+    }
+    else if (x == 2)
+    {
+        for (i = 0, j = 1; i < _jobList.size(); i++)
+        {
+            if (_jobList.at(i)->GetType() == "远距离攻击型(RemoteJob)")
+            {
+                cout << j << "." << _jobList.at(i)->GetName() << endl;
+                j++;
+            }
+        }
+    }
+    else if (x == 3)
+    {
+        for (i = 0, j = 1; i < _jobList.size(); i++)
+        {
+            if (_jobList.at(i)->GetType() == "防御系(DefenseJob)")
+            {
+                cout << j << "." << _jobList.at(i)->GetName() << endl;
+                j++;
+            }
+        }
+    }
+
+    return j - 1;
 }
 
 GameSystem::~GameSystem()
@@ -547,5 +713,5 @@ GameSystem::~GameSystem()
     _jobList.clear();
     vector <Character>().swap(_charactersList);		// clear the vector
     vector <Character>().swap(_monsterList);
-    vector <Job>().swap(_jobList);
+    vector <Job*>().swap(_jobList);
 }

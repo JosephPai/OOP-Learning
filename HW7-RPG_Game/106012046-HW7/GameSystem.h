@@ -2,8 +2,11 @@
 #ifndef GAMESYS_H
 #define GAMESYS_H
 #include <vector>
+using namespace std;
 #include "Character.h"
-#include "Job.h"
+#include "MeleeJob.h"
+#include "RemoteJob.h"
+#include "DefenseJob.h"
 class GameSystem
 {
 public:
@@ -16,13 +19,13 @@ public:
     void DeleteCharacter();
     void NewJob();
     void DeleteJob();
-    void ListJobs();
+    int ListJobs(int x);
     ~GameSystem();
 
 private:
     vector<Character> _charactersList;
     vector<Character> _monsterList;
-    vector<Job> _jobList;
+    vector<Job*> _jobList;
 };
 
 #endif

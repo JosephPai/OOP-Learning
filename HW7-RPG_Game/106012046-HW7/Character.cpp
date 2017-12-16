@@ -1,11 +1,8 @@
 #include "Character.h"
-#include "Job.h"
 #include <iostream>
 #include <string>
 #include <random>
 #include <time.h>
-
-using namespace std;
 
 Character::Character()
 {
@@ -122,14 +119,16 @@ void Character::SetFailFightTimes(int times)
 
 bool Character::Fight(Character &monster)
 {
-    int hp1, hp2;
+    int hp1, hp2, k1, k2;
     int monDex, monStr, monCon, chaDex, chaStr;
     bool attackOrderFlag;
+    k1 = this->GetJob()->GetDamage(&monster);
+    k2 = monster.GetJob()->GetDamage(this);
     monDex = monster.GetDex() + (this->GetLevel() - 1) + monster.GetJob()->GetExtraDex();		//parameters is determined by character,level and job
-    monStr = monster.GetStr() + (this->GetLevel() - 1) + monster.GetJob()->GetExtraStr();
+    monStr = monster.GetStr() + (this->GetLevel() - 1) + monster.GetJob()->GetExtraStr() + k2;
     monCon = monster.GetCon() + (this->GetLevel() - 1) + monster.GetJob()->GetExtraCon();
     chaDex = this->GetDex() + this->GetJob()->GetExtraDex();
-    chaStr = this->GetStr() + this->GetJob()->GetExtraStr();
+    chaStr = this->GetStr() + this->GetJob()->GetExtraStr() + k1;
     hp1 = chaDex * 3;
     hp2 = monDex * 3;
     cout << "\n系统选择了[ " << monster.GetName() << " ]作为敌人。" << endl;
@@ -144,8 +143,14 @@ bool Character::Fight(Character &monster)
         if (attackOrderFlag)
         {
             cout << this->GetName() << "发动攻击！对"
-                 << monster.GetName() << "造成" << chaStr << "点伤害。" << endl;
-            cout << monster.GetName() << "的HP从" << hp2 << "变为";
+                 << monster.GetName() << "造成" << chaStr << "点伤害。";
+
+            if (k1==2)
+            {
+                cout << "*属性相克（Property restraint）";
+            }
+
+            cout << "\n" << monster.GetName() << "的HP从" << hp2 << "变为";
 
             if (hp2 > chaStr)
             {
@@ -193,8 +198,14 @@ bool Character::Fight(Character &monster)
         else
         {
             cout << monster.GetName() << "发动攻击！对"
-                 << this->GetName() << "造成" << monStr << "点伤害。" << endl;
-            cout << this->GetName() << "的HP从" << hp1 << "变为";
+                 << this->GetName() << "造成" << monStr << "点伤害。";
+
+            if (k2==2)
+            {
+                cout << "*属性相克（Property restraint）";
+            }
+
+            cout << "\n" << this->GetName() << "的HP从" << hp1 << "变为";
 
             if (hp1 > monStr)
             {
@@ -218,7 +229,8 @@ bool Character::Fight(Character &monster)
 void Character::GetInformation()
 {
     cout << "\n角色名称(Name) ：" << this->GetName() << endl;
-    cout << "目前等级(Current Level) ：" << this->GetLevel() << " / 职业(Job):" << this->GetJob()->GetName() << endl;
+    cout << "目前等级(Current Level) ：" << this->GetLevel() << " / 职业(Job):" << this->GetJob()->GetName()
+         << "  所属(JobType):" << this->GetJob()->GetType() << endl;
     cout << "目前经验值(Current Experience) ：" << this->GetExp() << endl;
     cout << "STR : " << this->GetStr();
 
